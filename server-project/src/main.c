@@ -28,7 +28,6 @@
 #include <time.h>
 #include "protocol.h"
 
-// --- Utility ---
 void clearwinsock(void) {
 #if defined(_WIN32) || defined(WIN32)
     WSACleanup();
@@ -105,8 +104,7 @@ int serialize_response(const weather_response_t *res, char *buf) {
     return offset;
 }
 
-// --- MAIN ---
-int main(int argc, char *argv[]) {
+int main() {
 #if defined(_WIN32) || defined(WIN32)
     WSADATA wsaData;
     if (WSAStartup(MAKEWORD(2,2), &wsaData) != 0) {

@@ -34,11 +34,11 @@ float get_humidity(void);
 float get_wind(void);
 float get_pressure(void);
 
-// --- Prototipi funzioni di serializzazione/deserializzazione ---
+
 void deserialize_request(const char *buf, weather_request_t *req);
 int serialize_response(const weather_response_t *res, char *buf);
 
-// --- Prototipi funzioni di validazione ---
+
 int is_alpha_space_string(const char *s);
 int is_city_supported(const char *city);
 
