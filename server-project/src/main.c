@@ -34,11 +34,6 @@ void clearwinsock(void) {
 #endif
 }
 
-void errorHandler(const char* s) {
-    printf("ERRORE: %s\n", s);
-}
-
-
 void to_lowercase(char *str) {
     for (int i = 0; str[i] != '\0'; i++) {
         str[i] = (char)tolower((unsigned char)str[i]);
@@ -60,7 +55,7 @@ int is_city_supported(const char *city) {
         "palermo","genova","bologna","firenze","venezia"
     };
     char lower_city[CITY_NAME_MAX_LEN];
-    strncpy(lower_city, city, CITY_NAME_MAX_LEN);
+    strncpy(lower_city, city, CITY_NAME_MAX_LEN - 1);
     lower_city[CITY_NAME_MAX_LEN - 1] = '\0';
     to_lowercase(lower_city);
     for (int i = 0; i < 10; i++) {
@@ -120,13 +115,11 @@ int main() {
     char rsp_buf[sizeof(uint32_t) + sizeof(char) + sizeof(float)];
     int recvSize;
 
-
-    if ((sock = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP)) < 0) {
+    if ((sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) < 0) {
         perror("socket() failed");
         clearwinsock();
         return EXIT_FAILURE;
     }
-
 
     memset(&srvAddr, 0, sizeof(srvAddr));
     srvAddr.sin_family = AF_INET;
@@ -143,7 +136,6 @@ int main() {
     printf("Server in ascolto sulla porta %d...\n", SERVER_PORT);
     srand((unsigned)time(NULL));
 
-
     while (1) {
         cliLen = sizeof(cliAddr);
         recvSize = recvfrom(sock, req_buf, sizeof(req_buf), 0,
@@ -154,8 +146,17 @@ int main() {
         memset(&request, 0, sizeof(request));
         deserialize_request(req_buf, &request);
 
-        printf("Richiesta da localhost (%s): type='%c', city='%s'\n",
-               inet_ntoa(cliAddr.sin_addr), request.type, request.city);
+        char hostbuf[256];
+        struct hostent *rev = gethostbyaddr(&cliAddr.sin_addr, sizeof(cliAddr.sin_addr), AF_INET);
+        if (rev && rev->h_name) {
+            strncpy(hostbuf, rev->h_name, sizeof(hostbuf)-1);
+        } else {
+            strncpy(hostbuf, inet_ntoa(cliAddr.sin_addr), sizeof(hostbuf)-1);
+        }
+        hostbuf[sizeof(hostbuf)-1] = '\0';
+
+        printf("Richiesta ricevuta da %s (ip %s): type='%c', city='%s'\n",
+               hostbuf, inet_ntoa(cliAddr.sin_addr), request.type, request.city);
 
         weather_response_t response;
         response.status = STATUS_SUCCESS;
@@ -192,7 +193,6 @@ int main() {
             perror("sendto() failed");
         }
     }
-
 
 #if defined(_WIN32) || defined(WIN32)
     closesocket(sock);
