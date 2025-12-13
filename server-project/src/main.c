@@ -1,7 +1,7 @@
 /*
  * main.c
  *
- * UDP Server - Weather Service (portable: Windows, Linux, macOS)
+ * UDP Server - Weather Service (portable: Windows, Linux, macOS).
  */
 #include <stdint.h>
 #if defined(_WIN32) || defined(WIN32)
