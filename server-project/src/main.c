@@ -1,7 +1,7 @@
 /*
  * main.c
  *
- * UDP Server - Weather Service (portable: Windows, Linux, macOS).
+ * UDP Server - Weather Service (portable: Windows, Linux, macOS)
  */
 #include <stdint.h>
 #if defined(_WIN32) || defined(WIN32)
@@ -100,7 +100,7 @@ int serialize_response(const weather_response_t *res, char *buf) {
 }
 
 int main() {
-#if defined(_WIN32) || defined(WIN32)
+#if defined(_WIN32) || defined WIN32
     WSADATA wsaData;
     if (WSAStartup(MAKEWORD(2,2), &wsaData) != 0) {
         printf("Errore a WSAStartup()\n");
@@ -109,28 +109,24 @@ int main() {
 #endif
 
     int sock;
-    struct sockaddr_in srvAddr, cliAddr;
+    struct sockaddr_in srvAddr;
+	struct sockaddr_in cliAddr;
     socklen_t cliLen;
     char req_buf[1 + CITY_NAME_MAX_LEN];
     char rsp_buf[sizeof(uint32_t) + sizeof(char) + sizeof(float)];
     int recvSize;
 
-    if ((sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) < 0) {
-        perror("socket() failed");
-        clearwinsock();
-        return EXIT_FAILURE;
+    if ((sock = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP)) < 0) {
+    	perror("socket() failed");
     }
 
     memset(&srvAddr, 0, sizeof(srvAddr));
     srvAddr.sin_family = AF_INET;
-    srvAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
+    srvAddr.sin_addr.s_addr = htonl(INADDR_ANY);
     srvAddr.sin_port = htons(SERVER_PORT);
 
     if (bind(sock, (struct sockaddr*)&srvAddr, sizeof(srvAddr)) < 0) {
         perror("bind() failed");
-        closesocket(sock);
-        clearwinsock();
-        return EXIT_FAILURE;
     }
 
     printf("Server in ascolto sulla porta %d...\n", SERVER_PORT);
@@ -140,7 +136,11 @@ int main() {
         cliLen = sizeof(cliAddr);
         recvSize = recvfrom(sock, req_buf, sizeof(req_buf), 0,
                             (struct sockaddr*)&cliAddr, &cliLen);
-        if (recvSize <= 0) continue;
+        if (recvSize < 0) {
+            perror("recvfrom() failed");
+            continue;
+        }
+
 
         weather_request_t request;
         memset(&request, 0, sizeof(request));
