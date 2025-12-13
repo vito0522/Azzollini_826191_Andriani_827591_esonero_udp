@@ -13,7 +13,7 @@
 
 #define SERVER_PORT        56700   // Porta di default del server
 #define BUFFER_SIZE        512     // Buffer per parsing e messaggi
-#define CITY_NAME_MAX_LEN  64      // Lunghezza massima nome città
+#define CITY_NAME_MAX_LEN  64      // Lunghezza massima nome cittï¿½
 
 #define STATUS_SUCCESS            0
 #define STATUS_CITY_UNAVAILABLE   1
@@ -26,7 +26,7 @@
 
 typedef struct {
     char type;                       // 't','h','w','p'
-    char city[CITY_NAME_MAX_LEN];    // Nome città
+    char city[CITY_NAME_MAX_LEN];    // Nome cittï¿½
 } weather_request_t;
 
 typedef struct {
@@ -35,4 +35,4 @@ typedef struct {
     float value;          // valore meteo
 } weather_response_t;
 
-#endif /* PROTOCOL_H_ */
+#endif /*PROTOCOL_H_*/
