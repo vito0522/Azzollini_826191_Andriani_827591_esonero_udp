@@ -216,7 +216,7 @@ int main(int argc, char *argv[]) {
             response.value  = 0.0f;
         }
         else if (!is_alpha_space_string(request.city)) {
-            response.status = STATUS_INVALID_REQUEST;
+            response.status = STATUS_CITY_UNAVAILABLE;
             response.type   = '\0';
             response.value  = 0.0f;
         }

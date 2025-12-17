@@ -6,10 +6,10 @@
 #define SERVER_PORT 56700       // Porta di default da traccia
 #define BUFFER_SIZE 512         // Dimensione buffer generico
 #define QUEUE_SIZE 5            // Lunghezza coda connessioni pendenti
-#define CITY_NAME_MAX_LEN 64    // Lunghezza massima nome citt�
+#define CITY_NAME_MAX_LEN 64    // Lunghezza massima nome citta
 
 #define STATUS_SUCCESS 0            // Richiesta valida
-#define STATUS_CITY_UNAVAILABLE 1   // Citt� non supportata
+#define STATUS_CITY_UNAVAILABLE 1   // Citta non supportata
 #define STATUS_INVALID_REQUEST 2    // Tipo di richiesta non valido
 
 #define TYPE_TEMPERATURE 't'
@@ -19,7 +19,7 @@
 
 typedef struct {
     char type;                      // 't','h','w','p'
-    char city[CITY_NAME_MAX_LEN];   // Nome citt�
+    char city[CITY_NAME_MAX_LEN];   // Nome citta
 } weather_request_t;
 
 typedef struct {
@@ -42,4 +42,4 @@ int serialize_response(const weather_response_t *res, char *buf);
 int is_alpha_space_string(const char *s);
 int is_city_supported(const char *city);
 
-#endif /* PROTOCOL_H_ */
+#endif /* server PROTOCOL_H_ */
