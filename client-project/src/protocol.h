@@ -1,5 +1,5 @@
 /*
- * protocol.h
+ * client protocol.h
  *
  * Client header file
  * Definitions, constants and structures for the client
@@ -13,7 +13,7 @@
 
 #define SERVER_PORT        56700   // Porta di default del server
 #define BUFFER_SIZE        512     // Buffer per parsing e messaggi
-#define CITY_NAME_MAX_LEN  64      // Lunghezza massima nome citt�
+#define CITY_NAME_MAX_LEN  64      // Lunghezza massima nome citta
 
 #define STATUS_SUCCESS            0
 #define STATUS_CITY_UNAVAILABLE   1
@@ -26,7 +26,7 @@
 
 typedef struct {
     char type;                       // 't','h','w','p'
-    char city[CITY_NAME_MAX_LEN];    // Nome citt�
+    char city[CITY_NAME_MAX_LEN];    // Nome citta
 } weather_request_t;
 
 typedef struct {

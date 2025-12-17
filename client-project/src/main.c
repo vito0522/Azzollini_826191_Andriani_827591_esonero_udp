@@ -130,8 +130,7 @@ void deserialize_response(char *buf, weather_response_t *res) {
 
       const char *city_start = request_str + 1;
       while (*city_start == ' ') city_start++;
-      strncpy(request.city, city_start, CITY_NAME_MAX_LEN - 1);
-      request.city[CITY_NAME_MAX_LEN - 1] = '\0';
+      snprintf(request.city, CITY_NAME_MAX_LEN, "%s", city_start);
 
 
       int sock = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP);
@@ -165,10 +164,10 @@ void deserialize_response(char *buf, weather_response_t *res) {
               return 1;
           }
           memcpy(&server_addr.sin_addr.s_addr, host->h_addr_list[0], host->h_length);
-          strncpy(resolved_ip,
-                  inet_ntoa(*(struct in_addr*)host->h_addr_list[0]),
-                  sizeof(resolved_ip)-1);
-          strncpy(resolved_host, server_host, sizeof(resolved_host)-1);
+          snprintf(resolved_ip, sizeof(resolved_ip), "%s",
+                   inet_ntoa(*(struct in_addr*)host->h_addr_list[0]));
+
+          snprintf(resolved_host, sizeof(resolved_host), "%s", server_host);
       }
 
       char req_buf[1 + CITY_NAME_MAX_LEN];
