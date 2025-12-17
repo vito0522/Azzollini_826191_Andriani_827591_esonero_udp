@@ -193,7 +193,7 @@ int main(int argc, char *argv[]) {
         weather_request_t request;
         memset(&request, 0, sizeof(request));
         deserialize_request(req_buf, &request);
-
+        request.type = (char)tolower((unsigned char)request.type);
         char ip_str[64];
         snprintf(ip_str, sizeof(ip_str), "%s", inet_ntoa(cli.sin_addr));
         char host_str[256];
