@@ -52,7 +52,7 @@ int is_alpha_space_string(const char *s) {
     for (int i = 0; s[i] != '\0'; i++) {
         unsigned char c = (unsigned char)s[i];
         if (c == '\t') return 0;
-        if (!(isalpha(c) || c == ' ')) return 0;
+        if (!(isalnum(c) || c == ' ')) return 0;
     }
     return 1;
 }
@@ -193,7 +193,7 @@ int main(int argc, char *argv[]) {
         weather_request_t request;
         memset(&request, 0, sizeof(request));
         deserialize_request(req_buf, &request);
-        request.type = (char)tolower((unsigned char)request.type);
+
         char ip_str[64];
         snprintf(ip_str, sizeof(ip_str), "%s", inet_ntoa(cli.sin_addr));
         char host_str[256];
@@ -216,7 +216,7 @@ int main(int argc, char *argv[]) {
             response.value  = 0.0f;
         }
         else if (!is_alpha_space_string(request.city)) {
-            response.status = STATUS_CITY_UNAVAILABLE;
+            response.status = STATUS_INVALID_REQUEST;
             response.type   = '\0';
             response.value  = 0.0f;
         }
