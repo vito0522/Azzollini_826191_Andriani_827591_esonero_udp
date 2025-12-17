@@ -152,9 +152,15 @@ void deserialize_response(char *buf, weather_response_t *res) {
       if (ip != INADDR_NONE) {
           server_addr.sin_addr.s_addr = ip;
           snprintf(resolved_ip, sizeof(resolved_ip), "%s", server_host);
-          struct hostent *rev = gethostbyaddr((char*)&ip, sizeof(ip), AF_INET);
-          if (rev && rev->h_name) strncpy(resolved_host, rev->h_name, sizeof(resolved_host)-1);
-          else strncpy(resolved_host, server_host, sizeof(resolved_host)-1);
+
+          struct in_addr addr;
+          addr.s_addr = ip;
+          struct hostent *rev = gethostbyaddr(&addr, sizeof(addr), AF_INET);
+
+          if (rev && rev->h_name)
+              snprintf(resolved_host, sizeof(resolved_host), "%s", rev->h_name);
+          else
+              snprintf(resolved_host, sizeof(resolved_host), "%s", server_host);
       } else {
           struct hostent *host = gethostbyname(server_host);
           if (host == NULL || host->h_addr_list == NULL || host->h_addr_list[0] == NULL) {
